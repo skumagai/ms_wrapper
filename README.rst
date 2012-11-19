@@ -10,7 +10,8 @@ Wrappers
 
 Following models are implemented.
 
-- ms_ps.py: Partial-selfing (Nordborg & Donnelly (1997), Nordborg(2000))
+- ms_ps.py: Partial-selfing with and without recombination
+  (Nordborg & Donnelly (1997), Nordborg(2000))
 
 Requirement
 -----------
