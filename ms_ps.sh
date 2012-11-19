@@ -1,26 +1,32 @@
 #!/bin/bash
 
-ARGS=$(getopt -o "S:" -- "$@")
-
-eval set -- "$ARGS"
-
 SELFING=false
 S="0.0"
+SUBPOPS=false
+N="0"
 
-# scan the presence of '-P' flag indicating the presence of partial-selfing with rate "S".
+# scan the presence of '-S' flag. '-S' is a new flag indicating the precense
+# of partial-selfing with rate specified by the immediately following parameter.
+# while getopts "S:I:" opt; do
+# while true; do
+ORIGARGV="$@"
 while true; do
     case "$1" in
-        -S)
-            SELFING=true
+        -S) SELFING=true
             S="$2"
-            shift 2;;
-        --)
-            shift
-            break;;
-        *)
             shift;;
+
+        -I) SUBPOPS=true
+            N="$2"
+            shift;;
+        *) shift;;
     esac
+    if [ $# -le 0 ]; then
+        break
+    fi
 done
+
+set -- $ORIGARGV
 
 if [ x"$SELFING" = "xtrue" ]; then
     # When partial selfing is present, two things have to be performed before invoking ms.
@@ -31,11 +37,17 @@ if [ x"$SELFING" = "xtrue" ]; then
 
     declare -a PARAMS=()
 
+    if [ x"$SUBPOPS" = "xtrue" ] & [ "$N" -gt 1 ]; then
+
+    fi
+
+    PARAMS=("${PARAMS[@]}" "$2")
+    shift 2
+
     while true; do
         case "$1" in
+            -S) shift 2;;       # skip "-S" and its mandatory parameter.
             # TODO: add special flags that need to be modified.
-            -a)
-                ;;
             *) # Otherwise, just store the unmodified parameters.
                 PARAMS=("${PARAMS[@]}" "$1")
                 shift;;
